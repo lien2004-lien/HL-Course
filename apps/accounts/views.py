@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
 from .forms import RegisterForm
+from .models import User
 
 
 def register_view(request):
@@ -92,3 +93,5 @@ def teacher_dashboard(request):
         request,
         "accounts/teacher_dashboard.html"
     )
+
+
