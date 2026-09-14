@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang giảng viên</title>
+</head>
+<body>
+
+<h1>Trang giảng viên</h1>
+
+<p>Xin chào {{ request.user.username }}!</p>
+
+<p>Vai trò: Giảng viên</p>
+
+<a href="{% url 'home' %}">Trang chủ</a>
+
+</body>
+</html>
