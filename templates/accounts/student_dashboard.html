@@ -9,9 +9,42 @@
 <h1>Trang học viên</h1>
 
 <p>Xin chào {{ request.user.username }}!</p>
-
 <p>Vai trò: Học viên</p>
 
+{% if messages %}
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+{% endif %}
+
+<hr>
+
+<h2>Danh sách khóa học</h2>
+
+{% for course in courses %}
+    <div>
+        <h3>{{ course.title }}</h3>
+
+        <p>{{ course.description }}</p>
+
+        <p>Học phí: {{ course.price }} VNĐ</p>
+
+        <p>Giảng viên: {{ course.teacher }}</p>
+
+        <form method="post"
+              action="{% url 'courses:enroll_course' course.id %}">
+            {% csrf_token %}
+            <button type="submit">Đăng ký</button>
+        </form>
+    </div>
+
+    <hr>
+
+{% empty %}
+    <p>Hiện chưa có khóa học nào.</p>
+{% endfor %}
+
+<a href="{% url 'accounts:logout' %}">Đăng xuất</a>
 <a href="{% url 'home' %}">Trang chủ</a>
 
 </body>

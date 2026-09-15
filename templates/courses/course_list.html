@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách khóa học</title>
+</head>
+<body>
+
+    <h1>Danh sách khóa học</h1>
+
+    {% for course in courses %}
+        <h2>{{ course.title }}</h2>
+        <p>{{ course.description }}</p>
+        <p>Học phí: {{ course.price }} VNĐ</p>
+        <p>Giảng viên: {{ course.teacher }}</p>
+
+        <form method="post" action="{% url 'courses:enroll_course' course.id %}">
+            {% csrf_token %}
+            <button type="submit">Đăng ký</button>
+        </form>
+
+        <hr>
+    {% empty %}
+        <p>Chưa có khóa học nào.</p>
+    {% endfor %}
+
+</body>
+</html>

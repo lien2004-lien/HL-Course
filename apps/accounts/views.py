@@ -6,6 +6,8 @@ from django.shortcuts import redirect, render
 from .forms import RegisterForm
 from .models import User
 
+from apps.courses.models import Course
+
 
 def register_view(request):
     if request.user.is_authenticated:
@@ -78,9 +80,12 @@ def student_dashboard(request):
     if request.user.role != "student":
         return redirect("home")
 
+    courses = Course.objects.filter(is_active=True)
+
     return render(
         request,
-        "accounts/student_dashboard.html"
+        "accounts/student_dashboard.html",
+        {"courses": courses},
     )
 
 
