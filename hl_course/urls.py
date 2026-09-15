@@ -12,4 +12,5 @@ urlpatterns = [
     path("accounts/", include("apps.accounts.urls")),
     path("courses/", include("apps.courses.urls")),
     path("", home_view, name="home"),
+    path("payments/", include("apps.payments.urls")),
 ]

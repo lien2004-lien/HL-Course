@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thanh toán khóa học</title>
+</head>
+<body>
+
+    <h1>Thanh toán khóa học</h1>
+
+    <h2>{{ payment.course.title }}</h2>
+
+    <p>
+        Học viên:
+        {{ payment.student.username }}
+    </p>
+
+    <p>
+        Số tiền:
+        <strong>{{ payment.amount }} VNĐ</strong>
+    </p>
+
+    <p>
+        Trạng thái:
+        {{ payment.get_status_display }}
+    </p>
+
+    <hr>
+
+    <h3>Quét mã QR để thanh toán</h3>
+
+    <img
+        src="data:image/png;base64,{{ qr_code }}"
+        alt="Mã QR thanh toán"
+        width="300"
+    >
+
+    <p>
+        Vui lòng quét mã QR để thực hiện thanh toán.
+    </p>
+
+    <a href="{% url 'accounts:student_dashboard' %}">
+        Quay lại trang học viên
+    </a>
+
+</body>
+</html>

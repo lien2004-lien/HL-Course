@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .models import Course
 from apps.enrollments.models import Enrollment
 
+from apps.payments.models import Payment
 
 def course_list(request):
     courses = Course.objects.filter(is_active=True)
@@ -17,9 +18,13 @@ def course_list(request):
 
 
 @login_required
+@login_required
 def enroll_course(request, course_id):
     if request.user.role != "student":
-        messages.error(request, "Chỉ học viên mới được đăng ký khóa học.")
+        messages.error(
+            request,
+            "Chỉ học viên mới được đăng ký khóa học."
+        )
         return redirect("courses:course_list")
 
     course = get_object_or_404(
@@ -35,14 +40,21 @@ def enroll_course(request, course_id):
         )
 
         if created:
-            messages.success(
-                request,
-                f"Đăng ký khóa học '{course.title}' thành công.",
+            payment = Payment.objects.create(
+                student=request.user,
+                course=course,
+                enrollment=enrollment,
+                amount=course.price,
+    )
+
+            return redirect(
+             "payments:payment_detail",
+              payment_id=payment.id,
             )
         else:
             messages.warning(
                 request,
-                "Bạn đã đăng ký khóa học này rồi.",
+                "Bạn đã đăng ký khóa học này rồi."
             )
 
     return redirect("accounts:student_dashboard")
