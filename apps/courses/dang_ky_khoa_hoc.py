@@ -1,23 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404, redirect
 
 from .models import Course
 from apps.enrollments.models import Enrollment
-
 from apps.payments.models import Payment
 
-def course_list(request):
-    courses = Course.objects.filter(is_active=True)
 
-    return render(
-        request,
-        "courses/course_list.html",
-        {"courses": courses},
-    )
-
-
-@login_required
 @login_required
 def enroll_course(request, course_id):
     if request.user.role != "student":
@@ -45,12 +34,13 @@ def enroll_course(request, course_id):
                 course=course,
                 enrollment=enrollment,
                 amount=course.price,
-    )
+            )
 
             return redirect(
-             "payments:payment_detail",
-              payment_id=payment.id,
+                "payments:payment_detail",
+                payment_id=payment.id,
             )
+
         else:
             messages.warning(
                 request,

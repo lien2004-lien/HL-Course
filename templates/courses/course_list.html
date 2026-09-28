@@ -1,28 +1,228 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
-    <title>Danh sách khóa học</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Khóa học | HL-Course</title>
+
+    <link rel="stylesheet" href="{% static 'css/course.css' %}">
 </head>
+
 <body>
 
-    <h1>Danh sách khóa học</h1>
+<header class="course-header">
+    <div class="container header-inner">
 
-    {% for course in courses %}
-        <h2>{{ course.title }}</h2>
-        <p>{{ course.description }}</p>
-        <p>Học phí: {{ course.price }} VNĐ</p>
-        <p>Giảng viên: {{ course.teacher }}</p>
+        <a href="{% url 'home' %}" class="logo">
+            HL<span>-Course</span>
+        </a>
 
-        <form method="post" action="{% url 'courses:enroll_course' course.id %}">
-            {% csrf_token %}
-            <button type="submit">Đăng ký</button>
-        </form>
+        <nav>
+            <a href="{% url 'home' %}">
+                Trang chủ
+            </a>
 
-        <hr>
-    {% empty %}
-        <p>Chưa có khóa học nào.</p>
-    {% endfor %}
+            <a href="{% url 'courses:course_list' %}" class="active">
+                Khóa học
+            </a>
+
+            {% if user.is_authenticated %}
+
+                {% if user.role == "student" %}
+                    <a href="{% url 'accounts:student_dashboard' %}">
+                        Dashboard
+                    </a>
+                {% endif %}
+
+                <a href="{% url 'accounts:logout' %}">
+                    Đăng xuất
+                </a>
+
+            {% else %}
+
+                <a href="{% url 'accounts:login' %}">
+                    Đăng nhập
+                </a>
+
+                <a href="{% url 'accounts:register' %}" class="btn-register">
+                    Đăng ký
+                </a>
+
+            {% endif %}
+        </nav>
+
+    </div>
+</header>
+
+
+<main>
+
+    <!-- HERO -->
+    <section class="course-hero">
+
+        <div class="container">
+
+            <span class="section-label">
+                HL-COURSE
+            </span>
+
+            <h1>
+                Khóa học lập trình
+            </h1>
+
+            <p>
+                Học lập trình từ cơ bản đến nâng cao
+                với các khóa học được xây dựng phù hợp
+                cho từng học viên.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- COURSE LIST -->
+    <section class="courses-section">
+
+        <div class="container">
+
+            {% if courses %}
+
+                <div class="course-grid">
+
+                    {% for course in courses %}
+
+                        <article class="course-card">
+
+                            <div class="course-icon">
+                                &lt;/&gt;
+                            </div>
+
+                            <div class="course-content">
+
+                                <h2>
+                                    {{ course.title }}
+                                </h2>
+
+                                <p class="course-description">
+                                    {{ course.description|truncatechars:120 }}
+                                </p>
+
+
+                                <div class="course-info">
+
+                                    <div>
+                                        <span class="info-label">
+                                            Giảng viên
+                                        </span>
+
+                                        <strong>
+                                            {% if course.teacher %}
+                                                {{ course.teacher.get_full_name|default:course.teacher.username }}
+                                            {% else %}
+                                                Đang cập nhật
+                                            {% endif %}
+                                        </strong>
+                                    </div>
+
+
+                                    <div>
+                                        <span class="info-label">
+                                            Học phí
+                                        </span>
+
+                                        <strong class="price">
+                                            {{ course.price|floatformat:0 }} VNĐ
+                                        </strong>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="course-actions">
+
+                                    <!-- CHI TIẾT -->
+                                    <a
+                                        href="{% url 'courses:course_detail' course.id %}"
+                                        class="btn-detail"
+                                    >
+                                        Xem chi tiết
+                                    </a>
+
+
+                                    <!-- ĐĂNG KÝ -->
+                                    {% if user.is_authenticated and user.role == "student" %}
+
+                                        <form
+                                            method="post"
+                                            action="{% url 'courses:enroll_course' course.id %}"
+                                        >
+
+                                            {% csrf_token %}
+
+                                            <button
+                                                type="submit"
+                                                class="btn-enroll"
+                                            >
+                                                Đăng ký
+                                            </button>
+
+                                        </form>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-course">
+
+                    <div class="empty-icon">
+                        📚
+                    </div>
+
+                    <h2>
+                        Chưa có khóa học
+                    </h2>
+
+                    <p>
+                        Hiện tại chưa có khóa học nào được mở.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <div class="container">
+
+        <p>
+            © 2026 HL-Course. Nền tảng học lập trình.
+        </p>
+
+    </div>
+
+</footer>
 
 </body>
 </html>

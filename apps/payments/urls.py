@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from .thanh_toan import payment_detail
 
 
 app_name = "payments"
@@ -8,7 +8,7 @@ app_name = "payments"
 urlpatterns = [
     path(
         "<int:payment_id>/",
-        views.payment_detail,
+        payment_detail,
         name="payment_detail",
     ),
 ]

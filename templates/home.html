@@ -1,0 +1,851 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>HL-Course | Học lập trình trực tuyến</title>
+
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="header">
+    <div class="container navbar">
+
+        <a href="{% url 'home' %}" class="logo">
+            <span class="logo-mark">HL</span>
+            <span>HL-Course</span>
+        </a>
+
+        <nav class="nav-menu">
+            <a href="{% url 'home' %}" class="active">Trang chủ</a>
+            <a href="{% url 'courses:course_list' %}">Khóa học</a>
+            <a href="#about">Giới thiệu</a>
+            <a href="#teachers">Giảng viên</a>
+        </nav>
+
+        <div class="nav-actions">
+
+            {% if user.is_authenticated %}
+
+                {% if user.role == "student" %}
+                    <a href="{% url 'accounts:student_dashboard' %}"
+                       class="btn btn-outline">
+                        Trang cá nhân
+                    </a>
+
+                {% elif user.role == "teacher" %}
+                    <a href="{% url 'accounts:teacher_dashboard' %}"
+                       class="btn btn-outline">
+                        Quản lý
+                    </a>
+
+                {% endif %}
+
+                <a href="{% url 'accounts:logout' %}"
+                   class="btn btn-primary">
+                    Đăng xuất
+                </a>
+
+            {% else %}
+
+                <a href="{% url 'accounts:login' %}"
+                   class="login-link">
+                    Đăng nhập
+                </a>
+
+                <a href="{% url 'accounts:register' %}"
+                   class="btn btn-primary">
+                    Đăng ký
+                </a>
+
+            {% endif %}
+
+        </div>
+    </div>
+</header>
+
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+
+    <div class="container hero-grid">
+
+        <div class="hero-content">
+
+            <div class="hero-badge">
+                <span>●</span>
+                Nền tảng học lập trình trực tuyến
+            </div>
+
+            <h1>
+                Học lập trình.
+                <span>Thực hành.</span>
+                Phát triển.
+            </h1>
+
+            <p>
+                Học các kỹ năng lập trình thực tế cùng giảng viên,
+                bài học trực quan và lộ trình được xây dựng rõ ràng.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="{% url 'courses:course_list' %}"
+                   class="btn btn-primary btn-large">
+                    Khám phá khóa học
+                    <span>→</span>
+                </a>
+
+                <a href="#about"
+                   class="btn btn-light btn-large">
+                    Tìm hiểu thêm
+                </a>
+
+            </div>
+
+            <div class="hero-stats">
+
+                <div>
+                    <strong>{{ course_count }}+</strong>
+                    <span>Khóa học</span>
+                </div>
+
+                <div>
+                    <strong>{{ student_count }}+</strong>
+                    <span>Học viên</span>
+                </div>
+
+                <div>
+                    <strong>{{ teacher_count }}+</strong>
+                    <span>Giảng viên</span>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- HERO VISUAL -->
+        <div class="hero-visual">
+
+            <div class="code-card">
+
+                <div class="code-header">
+                    <div class="window-dots">
+                        <i></i>
+                        <i></i>
+                        <i></i>
+                    </div>
+
+                    <span>learning.py</span>
+                </div>
+
+                <div class="code-body">
+
+                    <div>
+                        <span class="code-number">01</span>
+                        <span class="purple">class</span>
+                        <span class="blue">Learning</span><span>:</span>
+                    </div>
+
+                    <div>
+                        <span class="code-number">02</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="purple">def</span>
+                        <span class="blue">start</span>():
+                    </div>
+
+                    <div>
+                        <span class="code-number">03</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="green">"Build your future"</span>
+                    </div>
+
+                    <div>
+                        <span class="code-number">04</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="purple">return</span>
+                        <span class="orange">True</span>
+                    </div>
+
+                    <div class="code-space"></div>
+
+                    <div>
+                        <span class="code-number">05</span>
+                        <span class="comment">
+                            # Keep learning...
+                        </span>
+                    </div>
+
+                    <div>
+                        <span class="code-number">06</span>
+                        <span class="comment">
+                            # Keep building...
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="floating-card floating-course">
+
+                <div class="mini-icon python-icon">
+                    PY
+                </div>
+
+                <div>
+                    <strong>Python cơ bản</strong>
+                    <span>12 bài học</span>
+                </div>
+
+                <div class="progress">
+                    <div></div>
+                </div>
+
+            </div>
+
+
+            <div class="floating-card floating-user">
+
+                <div class="avatar-small">
+                    HL
+                </div>
+
+                <div>
+                    <strong>Học tập mỗi ngày</strong>
+                    <span>+1 bài học hôm nay</span>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CATEGORIES ================= -->
+<section class="categories">
+
+    <div class="container">
+
+        <div class="section-heading">
+            <div>
+                <span class="section-label">DANH MỤC</span>
+                <h2>Khám phá lĩnh vực bạn yêu thích</h2>
+            </div>
+
+            <a href="{% url 'courses:course_list' %}">
+                Xem tất cả →
+            </a>
+        </div>
+
+
+        <div class="category-grid">
+
+            <a href="{% url 'courses:course_list' %}"
+               class="category-card">
+
+                <div class="category-icon python-bg">
+                    PY
+                </div>
+
+                <div>
+                    <h3>Python</h3>
+                    <p>Lập trình Python</p>
+                </div>
+
+                <span>→</span>
+
+            </a>
+
+
+            <a href="{% url 'courses:course_list' %}"
+               class="category-card">
+
+                <div class="category-icon web-bg">
+                    &lt;/&gt;
+                </div>
+
+                <div>
+                    <h3>Web Development</h3>
+                    <p>HTML, CSS, JavaScript</p>
+                </div>
+
+                <span>→</span>
+
+            </a>
+
+
+            <a href="{% url 'courses:course_list' %}"
+               class="category-card">
+
+                <div class="category-icon java-bg">
+                    JS
+                </div>
+
+                <div>
+                    <h3>JavaScript</h3>
+                    <p>Frontend & Backend</p>
+                </div>
+
+                <span>→</span>
+
+            </a>
+
+
+            <a href="{% url 'courses:course_list' %}"
+               class="category-card">
+
+                <div class="category-icon db-bg">
+                    DB
+                </div>
+
+                <div>
+                    <h3>Database</h3>
+                    <p>MySQL & dữ liệu</p>
+                </div>
+
+                <span>→</span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= COURSES ================= -->
+<section class="courses-section">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="section-label">KHÓA HỌC</span>
+                <h2>Khóa học nổi bật</h2>
+            </div>
+
+            <a href="{% url 'courses:course_list' %}">
+                Xem tất cả →
+            </a>
+
+        </div>
+
+
+        <div class="course-grid">
+
+            {% for course in courses %}
+
+            <article class="course-card">
+
+                <div class="course-cover">
+
+                    <span class="course-language">
+                        CODE
+                    </span>
+
+                    <div class="course-symbol">
+                        &lt;/&gt;
+                    </div>
+
+                </div>
+
+
+                <div class="course-body">
+
+                    <div class="course-meta">
+                        <span>Khóa học lập trình</span>
+                        <span>•</span>
+                        <span>Online</span>
+                    </div>
+
+                    <h3>
+                        {{ course.title }}
+                    </h3>
+
+                    <p>
+                        {{ course.description|truncatechars:100 }}
+                    </p>
+
+
+                    <div class="course-teacher">
+
+                        <div class="avatar">
+                            HL
+                        </div>
+
+                        <span>
+                            {% if course.teacher %}
+                                {{ course.teacher.get_full_name|default:course.teacher.username }}
+                            {% else %}
+                                HL-Course
+                            {% endif %}
+                        </span>
+
+                    </div>
+
+
+                    <div class="course-footer">
+
+                        <strong>
+                            {% if course.price == 0 %}
+                                Miễn phí
+                            {% else %}
+                                {{ course.price|floatformat:0 }} VNĐ
+                            {% endif %}
+                        </strong>
+
+                        <a href="{% url 'courses:enroll_course' course.id %}">
+                            Xem khóa học →
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            {% empty %}
+
+            <div class="empty-course">
+                <h3>Chưa có khóa học</h3>
+                <p>
+                    Các khóa học sẽ được cập nhật sớm.
+                </p>
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= ABOUT / PROCESS ================= -->
+<section class="process-section" id="about">
+
+    <div class="container">
+
+        <div class="center-heading">
+
+            <span class="section-label">CÁCH HOẠT ĐỘNG</span>
+
+            <h2>
+                Bắt đầu học chỉ với 4 bước
+            </h2>
+
+            <p>
+                HL-Course giúp bạn dễ dàng bắt đầu hành trình
+                học lập trình của mình.
+            </p>
+
+        </div>
+
+
+        <div class="process-grid">
+
+            <div class="process-card">
+
+                <div class="process-number">
+                    01
+                </div>
+
+                <h3>Chọn khóa học</h3>
+
+                <p>
+                    Khám phá các khóa học và lựa chọn
+                    nội dung phù hợp với mục tiêu.
+                </p>
+
+            </div>
+
+
+            <div class="process-card">
+
+                <div class="process-number">
+                    02
+                </div>
+
+                <h3>Đăng ký</h3>
+
+                <p>
+                    Đăng ký khóa học nhanh chóng
+                    ngay trên hệ thống.
+                </p>
+
+            </div>
+
+
+            <div class="process-card">
+
+                <div class="process-number">
+                    03
+                </div>
+
+                <h3>Thanh toán</h3>
+
+                <p>
+                    Thanh toán thuận tiện bằng
+                    mã QR trực tuyến.
+                </p>
+
+            </div>
+
+
+            <div class="process-card">
+
+                <div class="process-number">
+                    04
+                </div>
+
+                <h3>Bắt đầu học</h3>
+
+                <p>
+                    Nhận lịch học và bắt đầu
+                    hành trình học tập.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= BENEFITS ================= -->
+<section class="benefits-section">
+
+    <div class="container benefits-grid">
+
+        <div class="benefits-visual">
+
+            <div class="dashboard-card">
+
+                <div class="dashboard-top">
+                    <span>Learning Dashboard</span>
+                    <span class="status-dot">●</span>
+                </div>
+
+                <div class="learning-progress">
+
+                    <div>
+                        <span>Tiến độ học tập</span>
+                        <strong>78%</strong>
+                    </div>
+
+                    <div class="progress-large">
+                        <span></span>
+                    </div>
+
+                </div>
+
+
+                <div class="lesson-list">
+
+                    <div class="lesson done">
+                        <span>✓</span>
+                        <div>
+                            <strong>Python cơ bản</strong>
+                            <small>Hoàn thành</small>
+                        </div>
+                    </div>
+
+                    <div class="lesson done">
+                        <span>✓</span>
+                        <div>
+                            <strong>Biến và kiểu dữ liệu</strong>
+                            <small>Hoàn thành</small>
+                        </div>
+                    </div>
+
+                    <div class="lesson active">
+                        <span>→</span>
+                        <div>
+                            <strong>Hàm trong Python</strong>
+                            <small>Đang học</small>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="benefits-content">
+
+            <span class="section-label">
+                TẠI SAO CHỌN HL-COURSE?
+            </span>
+
+            <h2>
+                Học tập đơn giản,
+                tiến bộ từng ngày.
+            </h2>
+
+            <p class="benefits-description">
+                Mọi thứ bạn cần để học lập trình đều được
+                tập trung trong một nền tảng.
+            </p>
+
+
+            <div class="benefit-list">
+
+                <div class="benefit-item">
+
+                    <div class="benefit-icon">
+                        ✓
+                    </div>
+
+                    <div>
+                        <h3>Lộ trình rõ ràng</h3>
+                        <p>
+                            Nội dung được sắp xếp theo từng bước
+                            giúp dễ dàng theo dõi.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="benefit-item">
+
+                    <div class="benefit-icon">
+                        ✓
+                    </div>
+
+                    <div>
+                        <h3>Giảng viên hỗ trợ</h3>
+                        <p>
+                            Học viên nhận được thông báo và
+                            hỗ trợ từ giảng viên.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="benefit-item">
+
+                    <div class="benefit-icon">
+                        ✓
+                    </div>
+
+                    <div>
+                        <h3>Quản lý học tập</h3>
+                        <p>
+                            Theo dõi khóa học, lịch học
+                            và thông tin đăng ký.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= TEACHERS ================= -->
+<section class="teachers-section" id="teachers">
+
+    <div class="container">
+
+        <div class="section-heading">
+
+            <div>
+                <span class="section-label">
+                    GIẢNG VIÊN
+                </span>
+
+                <h2>
+                    Đồng hành cùng bạn
+                </h2>
+            </div>
+
+        </div>
+
+
+        <div class="teacher-grid">
+
+            {% for teacher in teachers %}
+
+            <div class="teacher-card">
+
+                <div class="teacher-avatar">
+                    {{ teacher.username|slice:":2"|upper }}
+                </div>
+
+                <h3>
+                    {{ teacher.get_full_name|default:teacher.username }}
+                </h3>
+
+                <p>
+                    Giảng viên lập trình
+                </p>
+
+                <div class="teacher-tag">
+                    HL-Course
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <div class="empty-teacher">
+                Giảng viên sẽ được cập nhật.
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= CTA ================= -->
+<section class="cta-section">
+
+    <div class="container">
+
+        <div class="cta-box">
+
+            <div>
+
+                <span class="section-label">
+                    BẮT ĐẦU NGAY
+                </span>
+
+                <h2>
+                    Sẵn sàng nâng cấp
+                    kỹ năng lập trình?
+                </h2>
+
+                <p>
+                    Chọn một khóa học và bắt đầu hành trình
+                    học tập của bạn ngay hôm nay.
+                </p>
+
+            </div>
+
+            <a href="{% url 'courses:course_list' %}"
+               class="btn btn-white btn-large">
+                Khám phá khóa học →
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+
+    <div class="container footer-grid">
+
+        <div>
+
+            <a href="{% url 'home' %}" class="logo footer-logo">
+                <span class="logo-mark">HL</span>
+                <span>HL-Course</span>
+            </a>
+
+            <p class="footer-description">
+                Nền tảng học lập trình trực tuyến
+                dành cho học viên muốn phát triển kỹ năng.
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <h4>Khám phá</h4>
+
+            <a href="{% url 'courses:course_list' %}">
+                Khóa học
+            </a>
+
+            <a href="#teachers">
+                Giảng viên
+            </a>
+
+            <a href="#about">
+                Giới thiệu
+            </a>
+
+        </div>
+
+
+        <div>
+
+            <h4>Tài khoản</h4>
+
+            <a href="{% url 'accounts:login' %}">
+                Đăng nhập
+            </a>
+
+            <a href="{% url 'accounts:register' %}">
+                Đăng ký
+            </a>
+
+        </div>
+
+
+        <div>
+
+            <h4>HL-Course</h4>
+
+            <p>
+                Học lập trình
+                <br>
+                Thực hành mỗi ngày
+                <br>
+                Phát triển tương lai
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        <div class="container">
+
+            © 2026 HL-Course. All rights reserved.
+
+        </div>
+
+    </div>
+
+</footer>
+
+</body>
+</html>

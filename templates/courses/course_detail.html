@@ -1,0 +1,267 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{{ course.title }} | HL-Course</title>
+
+    <link rel="stylesheet" href="{% static 'css/course.css' %}">
+</head>
+
+<body>
+
+<header class="course-header">
+
+    <div class="container header-inner">
+
+        <a href="{% url 'home' %}" class="logo">
+            HL<span>-Course</span>
+        </a>
+
+        <nav>
+
+            <a href="{% url 'home' %}">
+                Trang chủ
+            </a>
+
+            <a href="{% url 'courses:course_list' %}">
+                Khóa học
+            </a>
+
+            {% if user.is_authenticated %}
+
+                {% if user.role == "student" %}
+                    <a href="{% url 'accounts:student_dashboard' %}">
+                        Dashboard
+                    </a>
+                {% endif %}
+
+                <a href="{% url 'accounts:logout' %}">
+                    Đăng xuất
+                </a>
+
+            {% else %}
+
+                <a href="{% url 'accounts:login' %}">
+                    Đăng nhập
+                </a>
+
+                <a href="{% url 'accounts:register' %}" class="btn-register">
+                    Đăng ký
+                </a>
+
+            {% endif %}
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+<main>
+
+    <section class="detail-section">
+
+        <div class="container">
+
+            <a
+                href="{% url 'courses:course_list' %}"
+                class="back-link"
+            >
+                ← Quay lại danh sách khóa học
+            </a>
+
+
+            <div class="course-detail">
+
+                <!-- LEFT -->
+                <div class="detail-main">
+
+                    <div class="detail-icon">
+                        &lt;/&gt;
+                    </div>
+
+
+                    <span class="detail-label">
+                        KHÓA HỌC LẬP TRÌNH
+                    </span>
+
+
+                    <h1>
+                        {{ course.title }}
+                    </h1>
+
+
+                    <div class="detail-description">
+
+                        <h2>
+                            Giới thiệu khóa học
+                        </h2>
+
+                        <p>
+                            {{ course.description|linebreaksbr }}
+                        </p>
+
+                    </div>
+
+
+                    <div class="course-benefits">
+
+                        <h2>
+                            Nội dung nổi bật
+                        </h2>
+
+                        <div class="benefit-grid">
+
+                            <div class="benefit-item">
+                                <span>✓</span>
+                                <p>Học từ cơ bản đến nâng cao</p>
+                            </div>
+
+                            <div class="benefit-item">
+                                <span>✓</span>
+                                <p>Được hướng dẫn bởi giảng viên</p>
+                            </div>
+
+                            <div class="benefit-item">
+                                <span>✓</span>
+                                <p>Thực hành trong quá trình học</p>
+                            </div>
+
+                            <div class="benefit-item">
+                                <span>✓</span>
+                                <p>Được hỗ trợ trong quá trình học</p>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RIGHT -->
+                <aside class="detail-sidebar">
+
+                    <div class="price-box">
+
+                        <span>
+                            Học phí
+                        </span>
+
+                        <strong>
+                            {{ course.price|floatformat:0 }} VNĐ
+                        </strong>
+
+                    </div>
+
+
+                    <div class="teacher-box">
+
+                        <span class="box-label">
+                            Giảng viên
+                        </span>
+
+                        {% if course.teacher %}
+
+                            <h3>
+                                {{ course.teacher.get_full_name|default:course.teacher.username }}
+                            </h3>
+
+                            <p>
+                                Giảng viên khóa học
+                            </p>
+
+                        {% else %}
+
+                            <h3>
+                                Đang cập nhật
+                            </h3>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <div class="course-status">
+
+                        <span class="status-dot"></span>
+
+                        {% if course.is_active %}
+                            Đang mở đăng ký
+                        {% else %}
+                            Đã đóng đăng ký
+                        {% endif %}
+
+                    </div>
+
+
+                    {% if user.is_authenticated and user.role == "student" %}
+
+                        {% if course.is_active %}
+
+                            <form
+                                method="post"
+                                action="{% url 'courses:enroll_course' course.id %}"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="detail-enroll-btn"
+                                >
+                                    Đăng ký khóa học
+                                </button>
+
+                            </form>
+
+                        {% endif %}
+
+                    {% elif not user.is_authenticated %}
+
+                        <a
+                            href="{% url 'accounts:login' %}"
+                            class="detail-enroll-btn"
+                        >
+                            Đăng nhập để đăng ký
+                        </a>
+
+                    {% endif %}
+
+
+                    <p class="secure-text">
+                        🔒 Thông tin đăng ký được bảo mật
+                    </p>
+
+                </aside>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+
+    <div class="container">
+
+        <p>
+            © 2026 HL-Course. Nền tảng học lập trình.
+        </p>
+
+    </div>
+
+</footer>
+
+</body>
+
+</html>
