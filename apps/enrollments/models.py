@@ -1,6 +1,7 @@
 from django.db import models
+
 from apps.accounts.models import User
-from apps.courses.models import Course
+from apps.courses.models import Course, CourseClass
 
 
 class Enrollment(models.Model):
@@ -17,7 +18,17 @@ class Enrollment(models.Model):
         related_name="enrollments",
     )
 
-    enrolled_at = models.DateTimeField(auto_now_add=True)
+    class_group = models.ForeignKey(
+        CourseClass,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="enrollments",
+    )
+
+    enrolled_at = models.DateTimeField(
+        auto_now_add=True,
+    )
 
     class Meta:
         constraints = [

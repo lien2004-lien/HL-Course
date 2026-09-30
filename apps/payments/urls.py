@@ -1,14 +1,15 @@
 from django.urls import path
 
-from .thanh_toan import payment_detail
+from . import thanh_toan
 
 
 app_name = "payments"
 
+
 urlpatterns = [
     path(
         "<int:payment_id>/",
-        payment_detail,
+        thanh_toan.thanh_toan,
         name="payment_detail",
     ),
 ]
