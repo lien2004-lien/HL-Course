@@ -1,9 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Quản lý lớp học</title>
+    <title>Quản lý lớp học - HL Course</title>
 
     <style>
         * {
@@ -17,31 +19,67 @@
             color: #1f2937;
         }
 
+        /* HEADER */
         .header {
             background: #1e40af;
             color: white;
             padding: 20px 40px;
-
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 20px;
         }
 
         .header h1 {
-            margin: 0;
+            margin: 0 0 8px;
         }
 
         .header a {
             color: white;
             text-decoration: none;
+            font-weight: bold;
         }
 
+        .header a:hover {
+            text-decoration: underline;
+        }
+
+        /* CONTAINER */
         .container {
             max-width: 1200px;
             margin: 30px auto;
             padding: 0 20px;
         }
 
+        /* THÔNG BÁO */
+        .alert {
+            padding: 14px 18px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            background: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+
+        .alert.success {
+            background: #dcfce7;
+            color: #166534;
+            border-color: #86efac;
+        }
+
+        .alert.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-color: #fca5a5;
+        }
+
+        .alert.warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #fcd34d;
+        }
+
+        /* THỐNG KÊ */
         .statistics {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -60,14 +98,15 @@
             font-size: 32px;
             font-weight: bold;
             color: #2563eb;
+            margin-top: 10px;
         }
 
+        /* THẺ LỚP */
         .class-card {
             background: white;
             border-radius: 12px;
             padding: 25px;
             margin-bottom: 25px;
-
             box-shadow: 0 3px 10px rgba(0,0,0,0.08);
         }
 
@@ -75,23 +114,45 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .class-header h2 {
+            margin-bottom: 8px;
+        }
+
+        .class-header h3 {
+            margin-top: 0;
+            color: #64748b;
         }
 
         .student-count {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
+            color: #2563eb;
         }
 
+        /* TRẠNG THÁI LỚP */
         .waiting {
             color: #d97706;
+            font-weight: bold;
         }
 
         .ready {
             color: #16a34a;
+            font-weight: bold;
         }
 
         .full {
             color: #dc2626;
+            font-weight: bold;
+        }
+
+        /* BẢNG HỌC VIÊN */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
         }
 
         table {
@@ -105,239 +166,403 @@
             padding: 12px;
             border-bottom: 1px solid #e5e7eb;
             text-align: left;
+            vertical-align: middle;
         }
 
         th {
             background: #f8fafc;
+            white-space: nowrap;
         }
 
+        tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        .payment-paid {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: #dcfce7;
+            color: #166534;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        /* XUẤT EXCEL */
+        .export-actions {
+            margin: 15px 0 20px;
+        }
+
+        .btn-export {
+            display: inline-block;
+            background: #16a34a;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-export:hover {
+            background: #15803d;
+        }
+
+        /* THỜI KHÓA BIỂU */
         .schedule {
             margin-top: 25px;
             padding-top: 20px;
             border-top: 1px solid #ddd;
         }
 
+        .schedule-item {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: #eff6ff;
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+
+        /* GỬI THỜI KHÓA BIỂU */
+        .btn-send {
+            background: #2563eb;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-send:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-send:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
         .empty {
             color: #6b7280;
             padding: 20px 0;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px;
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .statistics {
+                grid-template-columns: 1fr;
+            }
+
+            .class-card {
+                padding: 18px;
+            }
+
+            .student-count {
+                font-size: 20px;
+            }
+
+            .btn-export,
+            .btn-send {
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
 </head>
 
 <body>
 
-<div class="header">
-
-    <div>
-        <h1>Quản lý lớp học</h1>
+    <!-- HEADER -->
+    <div class="header">
 
         <div>
-            Giảng viên:
-            {{ request.user.username }}
-        </div>
-    </div>
+            <h1>Quản lý lớp học</h1>
 
-    <a href="{% url 'accounts:logout' %}">
-        Đăng xuất
-    </a>
-
-</div>
-
-
-<div class="container">
-
-    <div class="statistics">
-
-        <div class="stat-card">
-
-            <div>Tổng số lớp</div>
-
-            <div class="stat-number">
-                {{ total_classes }}
+            <div>
+                Giảng viên: {{ request.user.username }}
             </div>
-
         </div>
 
-
-        <div class="stat-card">
-
-            <div>Tổng học viên</div>
-
-            <div class="stat-number">
-                {{ total_students }}
-            </div>
-
-        </div>
+        <a href="{% url 'accounts:logout' %}">
+            Đăng xuất
+        </a>
 
     </div>
 
+    <div class="container">
 
-    <h2>Lớp học của tôi</h2>
-
-
-    {% for class_group in classes %}
-
-        <div class="class-card">
-
-            <div class="class-header">
-
-                <div>
-
-                    <h2>
-                        {{ class_group.course.title }}
-                    </h2>
-
-                    <h3>
-                        {{ class_group.name }}
-                    </h3>
-
+        <!-- THÔNG BÁO HỆ THỐNG -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {{ message.tags }}">
+                    {{ message }}
                 </div>
+            {% endfor %}
+        {% endif %}
 
+        <!-- THỐNG KÊ -->
+        <div class="statistics">
 
-                <div class="student-count">
+            <div class="stat-card">
+                <div>Tổng số lớp</div>
 
-                    {{ class_group.student_count }}
-                    /
-                    {{ class_group.max_students }}
-
+                <div class="stat-number">
+                    {{ total_classes }}
                 </div>
-
             </div>
 
+            <div class="stat-card">
+                <div>Tổng học viên đã thanh toán</div>
 
-            {% if class_group.student_count < class_group.min_students %}
+                <div class="stat-number">
+                    {{ total_students }}
+                </div>
+            </div>
 
-                <p class="waiting">
-                    Chờ đủ học viên
-                    (tối thiểu {{ class_group.min_students }} học viên)
-                </p>
+        </div>
 
-            {% elif class_group.student_count >= class_group.max_students %}
+        <h2>Lớp học của tôi</h2>
 
-                <p class="full">
-                    Lớp đã đủ {{ class_group.max_students }} học viên
-                </p>
+        <!-- DANH SÁCH LỚP -->
+        {% for class_group in classes %}
 
-            {% else %}
+            <div class="class-card">
 
-                <p class="ready">
-                    Đủ điều kiện mở lớp
-                </p>
+                <!-- THÔNG TIN LỚP -->
+                <div class="class-header">
 
-            {% endif %}
+                    <div>
+                        <h2>{{ class_group.course.title }}</h2>
 
+                        <h3>{{ class_group.name }}</h3>
 
-            <h3>Danh sách học viên</h3>
+                        <p>
+                            <strong>Giảng viên:</strong>
 
+                            {% if class_group.teacher %}
+                                {{ class_group.teacher.get_full_name|default:class_group.teacher.username }}
+                            {% else %}
+                                Chưa phân công
+                            {% endif %}
+                        </p>
+                    </div>
 
-            {% if class_group.enrollments.all %}
+                    <div class="student-count">
+                        Sĩ số:
+                        {{ class_group.student_count }}
+                        /
+                        {{ class_group.max_students }}
+                    </div>
 
-                <table>
+                </div>
 
-                    <thead>
+                <!-- TRẠNG THÁI LỚP -->
+                {% if class_group.student_count < class_group.min_students %}
 
-                        <tr>
-                            <th>STT</th>
-                            <th>Tên đăng nhập</th>
-                            <th>Họ tên</th>
-                            <th>Email</th>
-                            <th>Ngày đăng ký</th>
-                        </tr>
+                    <p class="waiting">
+                        Chờ đủ học viên
+                        (tối thiểu {{ class_group.min_students }} học viên)
+                    </p>
 
-                    </thead>
+                {% elif class_group.student_count >= class_group.max_students %}
 
-                    <tbody>
+                    <p class="full">
+                        Lớp đã đủ {{ class_group.max_students }} học viên
+                    </p>
 
-                        {% for enrollment in class_group.enrollments.all %}
+                {% else %}
 
-                            <tr>
+                    <p class="ready">
+                        Đủ điều kiện mở lớp
+                    </p>
 
-                                <td>
-                                    {{ forloop.counter }}
-                                </td>
+                {% endif %}
 
-                                <td>
-                                    {{ enrollment.student.username }}
-                                </td>
+                <!-- DANH SÁCH HỌC VIÊN -->
+                <h3>Danh sách học viên đã thanh toán</h3>
 
-                                <td>
-                                    {{ enrollment.student.first_name }}
-                                    {{ enrollment.student.last_name }}
-                                </td>
+                <!-- NÚT XUẤT EXCEL -->
+                <div class="export-actions">
 
-                                <td>
-                                    {{ enrollment.student.email }}
-                                </td>
+                    <a
+                        href="{% url 'accounts:export_class_students' class_group.id %}"
+                        class="btn-export"
+                    >
+                        Xuất danh sách Excel
+                    </a>
 
-                                <td>
-                                    {{ enrollment.enrolled_at|date:"d/m/Y H:i" }}
-                                </td>
+                </div>
 
-                            </tr>
+                {% with students=class_group.paid_enrollments %}
 
-                        {% endfor %}
+                    {% if students.exists %}
 
-                    </tbody>
+                        <div class="table-wrapper">
 
-                </table>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Tên đăng nhập</th>
+                                        <th>Họ tên</th>
+                                        <th>Email</th>
+                                        <th>Ngày đăng ký</th>
+                                        <th>Thanh toán</th>
+                                    </tr>
+                                </thead>
 
-            {% else %}
+                                <tbody>
 
-                <p class="empty">
-                    Chưa có học viên.
-                </p>
+                                    {% for enrollment in students %}
 
-            {% endif %}
+                                        <tr>
 
+                                            <td>
+                                                {{ forloop.counter }}
+                                            </td>
 
-            <div class="schedule">
+                                            <td>
+                                                {{ enrollment.student.username }}
+                                            </td>
 
-                <h3>Thời khóa biểu</h3>
+                                            <td>
+                                                {{ enrollment.student.get_full_name|default:"Chưa cập nhật" }}
+                                            </td>
 
-                {% for schedule in class_group.schedules.all %}
+                                            <td>
+                                                {{ enrollment.student.email|default:"Chưa cập nhật" }}
+                                            </td>
 
-                    <p>
-                        <strong>
-                            {{ schedule.day_of_week }}
-                        </strong>
+                                            <td>
+                                                {{ enrollment.enrolled_at|date:"d/m/Y H:i" }}
+                                            </td>
 
-                        {{ schedule.start_time|time:"H:i" }}
-                        -
+                                            <td>
+                                                <span class="payment-paid">
+                                                    Đã thanh toán
+                                                </span>
+                                            </td>
 
-                        {{ schedule.end_time|time:"H:i" }}
+                                        </tr>
 
-                        {% if schedule.room %}
-                            |
-                            Phòng:
-                            {{ schedule.room }}
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                    {% else %}
+
+                        <p class="empty">
+                            Chưa có học viên đã thanh toán trong lớp này.
+                        </p>
+
+                    {% endif %}
+
+                {% endwith %}
+
+                <!-- THỜI KHÓA BIỂU -->
+                <div class="schedule">
+
+                    <h3>Thời khóa biểu</h3>
+
+                    {% for schedule in class_group.schedules.all %}
+
+                        <div class="schedule-item">
+
+                            <strong>
+                                {{ schedule.day_of_week }}
+                            </strong>
+
+                            <span>
+                                {{ schedule.start_time|time:"H:i" }}
+                                -
+                                {{ schedule.end_time|time:"H:i" }}
+                            </span>
+
+                            {% if schedule.room %}
+                                <span>
+                                    | Phòng: {{ schedule.room }}
+                                </span>
+                            {% endif %}
+
+                            {% if schedule.note %}
+                                <div>
+                                    <strong>Ghi chú:</strong>
+                                    {{ schedule.note }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+                    {% empty %}
+
+                        <p class="empty">
+                            Admin chưa tạo thời khóa biểu cho lớp này.
+                        </p>
+
+                    {% endfor %}
+
+                    <!-- GỬI THỜI KHÓA BIỂU -->
+                    <form
+                        method="post"
+                        action="{% url 'accounts:send_class_schedule' class_group.id %}"
+                        style="margin-top: 20px;"
+                    >
+                        {% csrf_token %}
+
+                        {% if class_group.schedules.exists and class_group.student_count > 0 %}
+
+                            <button
+                                type="submit"
+                                class="btn-send"
+                            >
+                                Gửi thời khóa biểu cho học viên
+                            </button>
+
+                        {% else %}
+
+                            <button
+                                type="button"
+                                class="btn-send"
+                                disabled
+                            >
+                                Gửi thời khóa biểu cho học viên
+                            </button>
+
+                            <p class="empty">
+                                Cần có thời khóa biểu và ít nhất một
+                                học viên đã thanh toán để gửi thông báo.
+                            </p>
+
                         {% endif %}
-                    </p>
 
-                {% empty %}
+                    </form>
 
-                    <p class="empty">
-                        Chưa có thời khóa biểu.
-                    </p>
-
-                {% endfor %}
+                </div>
 
             </div>
 
-        </div>
+        {% empty %}
 
-    {% empty %}
+            <div class="class-card">
+                <p class="empty">
+                    Giảng viên hiện chưa được phân công lớp học nào.
+                </p>
+            </div>
 
-        <div class="class-card">
+        {% endfor %}
 
-            <p class="empty">
-                Giảng viên hiện chưa được phân công lớp học nào.
-            </p>
-
-        </div>
-
-    {% endfor %}
-
-</div>
+    </div>
 
 </body>
 </html>

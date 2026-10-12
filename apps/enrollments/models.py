@@ -5,6 +5,7 @@ from apps.courses.models import Course, CourseClass
 
 
 class Enrollment(models.Model):
+
     student = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -39,4 +40,21 @@ class Enrollment(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.student.username} - {self.course.title}"
+        return (
+            f"{self.student.username} - "
+            f"{self.course.title}"
+        )
+
+    @property
+    def payment_status(self):
+        try:
+            return self.payment.status
+        except Exception:
+            return "Chưa thanh toán"
+
+    @property
+    def class_name(self):
+        if self.class_group:
+            return self.class_group.name
+
+        return "Chưa phân lớp"

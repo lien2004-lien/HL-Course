@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "apps.courses",
     "apps.enrollments",
     "apps.payments",
+    "apps.notifications",
+   
 ]
 
 MIDDLEWARE = [
@@ -67,6 +69,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+
+                "apps.notifications.dem_thong_bao.unread_notifications",
             ],
         },
     },

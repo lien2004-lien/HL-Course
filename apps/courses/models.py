@@ -67,13 +67,25 @@ class CourseClass(models.Model):
     def __str__(self):
         return f"{self.course.title} - {self.name}"
 
+
     @property
     def student_count(self):
-        return self.enrollments.count()
+        return self.enrollments.filter(
+        payment__status="paid"
+        ).count()
 
     @property
     def is_full(self):
         return self.student_count >= self.max_students
+
+
+    @property
+    def paid_enrollments(self):
+        return self.enrollments.filter(
+        payment__status="paid"
+    ).select_related(
+        "student"
+    )
 
 
 class Schedule(models.Model):

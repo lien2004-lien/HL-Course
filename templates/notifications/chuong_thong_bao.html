@@ -1,0 +1,72 @@
+
+<style>
+    .hl-notification-bell {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        background: #eff6ff;
+        border-radius: 50%;
+        text-decoration: none;
+        transition: background 0.2s;
+    }
+
+    .hl-notification-bell:hover {
+        background: #dbeafe;
+    }
+
+    .hl-bell-icon {
+        font-size: 24px;
+    }
+
+    .hl-notification-count {
+        position: absolute;
+        top: -5px;
+        right: -8px;
+        min-width: 22px;
+        height: 22px;
+        padding: 0 5px;
+        background: #dc2626;
+        color: white;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+{% if request.user.is_authenticated %}
+
+    {% if request.user.role == "student" %}
+
+        <a
+            href="{% url 'notifications:student_notifications' %}"
+            class="hl-notification-bell"
+            title="Xem thông báo"
+            aria-label="Xem thông báo"
+        >
+            <span class="hl-bell-icon">🔔</span>
+
+            {% if notification_unread_count > 0 %}
+
+                <span class="hl-notification-count">
+
+                    {% if notification_unread_count > 99 %}
+                        99+
+                    {% else %}
+                        {{ notification_unread_count }}
+                    {% endif %}
+
+                </span>
+
+            {% endif %}
+
+        </a>
+
+    {% endif %}
+
+{% endif %}

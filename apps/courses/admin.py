@@ -5,6 +5,7 @@ from .models import Course, CourseClass, Schedule
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
+
     list_display = (
         "title",
         "price",
@@ -25,13 +26,14 @@ class CourseAdmin(admin.ModelAdmin):
 
 @admin.register(CourseClass)
 class CourseClassAdmin(admin.ModelAdmin):
+
     list_display = (
         "name",
         "course",
         "teacher",
         "student_count_display",
-        "min_students",
         "max_students",
+        "class_status",
         "is_active",
     )
 
@@ -47,13 +49,31 @@ class CourseClassAdmin(admin.ModelAdmin):
         "teacher__username",
     )
 
-    @admin.display(description="Số học viên")
+    @admin.display(
+        description="Sĩ số"
+    )
     def student_count_display(self, obj):
         return obj.student_count
+
+    @admin.display(
+        description="Trạng thái lớp"
+    )
+    def class_status(self, obj):
+
+        count = obj.student_count
+
+        if count >= obj.max_students:
+            return "Đã đầy"
+
+        if count >= obj.min_students:
+            return "Đủ điều kiện mở lớp"
+
+        return "Chưa đủ học viên"
 
 
 @admin.register(Schedule)
 class ScheduleAdmin(admin.ModelAdmin):
+
     list_display = (
         "class_group",
         "day_of_week",
@@ -63,12 +83,6 @@ class ScheduleAdmin(admin.ModelAdmin):
     )
 
     list_filter = (
-        "day_of_week",
         "class_group",
-    )
-
-    search_fields = (
-        "class_group__name",
-        "class_group__course__title",
-        "room",
+        "day_of_week",
     )

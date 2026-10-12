@@ -6,57 +6,65 @@ from .models import CourseClass
 @transaction.atomic
 def assign_enrollment_to_class(enrollment):
 
-    # Nếu học viên đã được xếp lớp thì giữ nguyên
+    # Đã có lớp thì không phân lại
     if enrollment.class_group_id:
         return enrollment.class_group
 
+    # Chỉ học viên đã thanh toán mới được vào lớp
+    try:
+        payment = enrollment.payment
+    except Exception:
+        return None
+
+    if payment.status != "paid":
+        return None
+
     course = enrollment.course
 
-    # Khóa các lớp hiện có trong lúc phân lớp
-    classes = (
-        CourseClass.objects
-        .select_for_update()
-        .filter(
-            course=course,
-            is_active=True,
-        )
-        .order_by("id")
+    # Tìm lớp của đúng khóa học còn chỗ
+    classes = CourseClass.objects.filter(
+        course=course,
+        is_active=True,
+    ).order_by("id")
+
+    for class_group in classes:
+
+        if class_group.student_count < class_group.max_students:
+
+            enrollment.class_group = class_group
+
+            enrollment.save(
+                update_fields=[
+                    "class_group"
+                ]
+            )
+
+            return class_group
+
+    # Không còn lớp nào có chỗ
+    # -> tự động mở lớp mới
+
+    class_number = (
+        CourseClass.objects.filter(
+            course=course
+        ).count()
+        + 1
     )
 
-    class_group = None
+    class_group = CourseClass.objects.create(
+        name=f"Lớp {class_number:02d}",
+        course=course,
+        teacher=course.teacher,
+        min_students=5,
+        max_students=10,
+    )
 
-    # Tìm lớp còn chỗ
-    for current_class in classes:
-
-        if current_class.student_count < current_class.max_students:
-            class_group = current_class
-            break
-
-    # Nếu tất cả lớp đều đủ 10 hoặc chưa có lớp nào
-    # thì tự động mở lớp mới
-    if class_group is None:
-
-        class_number = (
-            CourseClass.objects
-            .filter(course=course)
-            .count()
-            + 1
-        )
-
-        class_group = CourseClass.objects.create(
-            name=f"Lớp {class_number:02d}",
-            course=course,
-            teacher=course.teacher,
-            min_students=5,
-            max_students=10,
-            is_active=True,
-        )
-
-    # Xếp học viên vào lớp
     enrollment.class_group = class_group
 
     enrollment.save(
-        update_fields=["class_group"]
+        update_fields=[
+            "class_group"
+        ]
     )
 
     return class_group

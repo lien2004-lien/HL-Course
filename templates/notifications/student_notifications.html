@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Thông báo - HL Course</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            color: #1f2937;
+        }
+
+        .header {
+            background: #1e40af;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .page-header h2 {
+            margin: 0 0 8px;
+        }
+
+        .unread-count {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .notification {
+            background: white;
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 18px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+
+        .notification.unread {
+            border-left: 5px solid #2563eb;
+            background: #eff6ff;
+        }
+
+        .notification.read {
+            border-left: 5px solid #94a3b8;
+        }
+
+        .notification h3 {
+            margin: 0 0 12px;
+            color: #1d4ed8;
+        }
+
+        .notification p {
+            white-space: pre-line;
+            line-height: 1.7;
+        }
+
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .badge-new {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .badge-read {
+            background: #e5e7eb;
+            color: #64748b;
+        }
+
+        .meta {
+            margin-top: 12px;
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.8;
+        }
+
+        .actions {
+            margin-top: 18px;
+        }
+
+        .btn {
+            display: inline-block;
+            border: none;
+            padding: 11px 17px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #15803d;
+        }
+
+        .empty {
+            padding: 40px;
+            text-align: center;
+            background: white;
+            border-radius: 12px;
+            color: #64748b;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px;
+            }
+
+            .notification {
+                padding: 18px;
+            }
+
+            .page-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>HL Course - Thông báo học viên</h1>
+    </div>
+
+    <div class="container">
+
+        <div class="page-header">
+
+            <div>
+                <h2>Thông báo của tôi</h2>
+
+                <div class="unread-count">
+                    Bạn có {{ unread_count }} thông báo chưa đọc
+                </div>
+            </div>
+
+            {% if unread_count > 0 %}
+
+                <form
+                    method="post"
+                    action="{% url 'notifications:mark_all_notifications_read' %}"
+                >
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="btn btn-success"
+                    >
+                        Đánh dấu tất cả đã đọc
+                    </button>
+                </form>
+
+            {% endif %}
+
+        </div>
+
+        {% for notification in notifications %}
+
+            <div class="notification {% if notification.is_read %}read{% else %}unread{% endif %}">
+
+                <div class="notification-header">
+
+                    <h3>{{ notification.title }}</h3>
+
+                    {% if notification.is_read %}
+
+                        <span class="badge badge-read">
+                            Đã đọc
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge badge-new">
+                            Chưa đọc
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+                <p>{{ notification.message }}</p>
+
+                <div class="meta">
+
+                    {% if notification.class_group %}
+                        <div>
+                            <strong>Lớp:</strong>
+                            {{ notification.class_group.name }}
+                        </div>
+                    {% endif %}
+
+                    {% if notification.sender %}
+                        <div>
+                            <strong>Người gửi:</strong>
+                            {{ notification.sender.get_full_name|default:notification.sender.username }}
+                        </div>
+                    {% endif %}
+
+                    <div>
+                        <strong>Ngày gửi:</strong>
+                        {{ notification.created_at|date:"d/m/Y H:i" }}
+                    </div>
+
+                </div>
+
+                {% if not notification.is_read %}
+
+                    <div class="actions">
+
+                        <form
+                            method="post"
+                            action="{% url 'notifications:mark_notification_read' notification.id %}"
+                        >
+                            {% csrf_token %}
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                            >
+                                Đánh dấu đã đọc
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        {% empty %}
+
+            <div class="empty">
+                Bạn chưa có thông báo nào.
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</body>
+</html>

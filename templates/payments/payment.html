@@ -1,21 +1,23 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Thanh toán - HL Course</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Thanh toán khóa học</title>
 
     <style>
 
         * {
             box-sizing: border-box;
-            margin: 0;
-            padding: 0;
         }
 
         body {
+            margin: 0;
             font-family: Arial, sans-serif;
             background: #f4f7fb;
             color: #1f2937;
@@ -24,157 +26,135 @@
         .header {
             background: #2563eb;
             color: white;
-            padding: 20px 8%;
+            padding: 18px 40px;
         }
 
-        .header h1 {
-            font-size: 26px;
+        .header h2 {
+            margin: 0;
         }
 
         .container {
-            max-width: 1000px;
-            margin: 50px auto;
-            padding: 20px;
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
 
         .payment-box {
-            background: white;
-            border-radius: 18px;
-            padding: 35px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 40px;
+            gap: 30px;
         }
 
-        .course-info h2 {
-            color: #2563eb;
-            margin-bottom: 30px;
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 30px;
+            box-shadow: 0 4px 20px
+                rgba(0, 0, 0, 0.08);
         }
 
-        .info {
-            margin-bottom: 20px;
-            font-size: 16px;
-        }
-
-        .info span {
-            color: #6b7280;
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        .amount {
-            font-size: 30px;
-            font-weight: bold;
-            color: #dc2626;
-            margin: 30px 0;
+        .card h2 {
+            margin-top: 0;
+            color: #111827;
         }
 
         .qr-section {
             text-align: center;
-            border-left: 1px solid #e5e7eb;
-            padding-left: 40px;
         }
 
-        .qr-section h3 {
+        .qr-section img {
+            width: 280px;
+            height: 280px;
+            object-fit: contain;
+            border: 1px solid #e5e7eb;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .qr-title {
+            font-size: 20px;
+            font-weight: bold;
             margin-bottom: 20px;
         }
 
-        .qr {
-            width: 280px;
-            height: 280px;
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 13px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
 
-            border: 1px solid #ddd;
-            padding: 10px;
+        .label {
+            color: #6b7280;
+        }
 
-            display: block;
-            margin: auto;
+        .value {
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .amount {
+            color: #dc2626;
+            font-size: 22px;
+        }
+
+        .transfer-content {
+            background: #eff6ff;
+            color: #1d4ed8;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
         }
 
         .status {
             margin-top: 20px;
             padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+        }
 
-            border-radius: 10px;
-
+        .pending {
             background: #fff7ed;
             color: #c2410c;
-
-            font-weight: bold;
         }
 
-        .status-paid {
+        .paid {
             background: #ecfdf5;
             color: #047857;
         }
 
-        .btn {
-            margin-top: 20px;
-
+        .btn-pay {
             width: 100%;
-            padding: 15px;
-
             border: none;
-            border-radius: 10px;
-
-            background: #2563eb;
+            background: #16a34a;
             color: white;
-
+            padding: 15px;
             font-size: 16px;
             font-weight: bold;
-
+            border-radius: 8px;
             cursor: pointer;
-        }
-
-        .btn:hover {
-            background: #1d4ed8;
-        }
-
-        .success {
             margin-top: 20px;
-
-            padding: 18px;
-
-            background: #ecfdf5;
-            color: #047857;
-
-            border-radius: 10px;
-
-            font-weight: bold;
         }
 
-        .back {
-            display: inline-block;
-
-            margin-top: 25px;
-
-            color: #2563eb;
-
-            text-decoration: none;
+        .btn-pay:hover {
+            background: #15803d;
         }
 
         .note {
             margin-top: 20px;
-
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
             color: #6b7280;
-
             line-height: 1.6;
         }
 
-        @media (max-width: 700px) {
+        @media (max-width: 800px) {
 
             .payment-box {
                 grid-template-columns: 1fr;
-            }
-
-            .qr-section {
-                border-left: none;
-
-                border-top: 1px solid #e5e7eb;
-
-                padding-left: 0;
-                padding-top: 30px;
             }
 
         }
@@ -182,97 +162,179 @@
     </style>
 </head>
 
-
 <body>
 
-
-<header class="header">
-
-    <h1>HL Course</h1>
-
-</header>
+<div class="header">
+    <h2>HL Course - Thanh toán khóa học</h2>
+</div>
 
 
 <div class="container">
 
     <div class="payment-box">
 
+        <!-- ======================= -->
+        <!-- QR CODE -->
+        <!-- ======================= -->
 
-        <!-- THÔNG TIN KHÓA HỌC -->
+        <div class="card qr-section">
 
-        <div class="course-info">
+            <div class="qr-title">
+                Quét QR để thanh toán
+            </div>
 
-            <h2>Thanh toán khóa học</h2>
+            <img
+                src="data:image/png;base64,{{ qr_code }}"
+                alt="QR thanh toán"
+            >
+
+            <div class="note">
+
+                Quét mã QR để xem thông tin
+                thanh toán của khóa học.
+
+                <br><br>
+
+                Đây là chức năng thanh toán
+                mô phỏng phục vụ hệ thống
+                HL Course.
+
+            </div>
+
+        </div>
 
 
-            <div class="info">
+        <!-- ======================= -->
+        <!-- THÔNG TIN -->
+        <!-- ======================= -->
 
-                <span>Khóa học</span>
+        <div class="card">
 
-                <strong>
-                    {{ payment.course.title }}
-                </strong>
+            <h2>Thông tin thanh toán</h2>
+
+
+            <div class="info-row">
+
+                <span class="label">
+                    Mã thanh toán
+                </span>
+
+                <span class="value">
+                    #{{ payment.id }}
+                </span>
 
             </div>
 
 
-            <div class="info">
+            <div class="info-row">
 
-                <span>Học viên</span>
+                <span class="label">
+                    Học viên
+                </span>
 
-                <strong>
+                <span class="value">
                     {{ payment.student.username }}
-                </strong>
+                </span>
 
             </div>
 
 
-            <div class="info">
+            <div class="info-row">
 
-                <span>Mã thanh toán</span>
+                <span class="label">
+                    Khóa học
+                </span>
 
-                <strong>
-                    PAY{{ payment.id }}
-                </strong>
+                <span class="value">
+                    {{ payment.course.title }}
+                </span>
 
             </div>
 
 
-            <div class="amount">
+            <div class="info-row">
 
-                {{ payment.amount }} VNĐ
+                <span class="label">
+                    Ngân hàng
+                </span>
+
+                <span class="value">
+                    {{ bank_name }}
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span class="label">
+                    Số tài khoản
+                </span>
+
+                <span class="value">
+                    {{ bank_account }}
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span class="label">
+                    Chủ tài khoản
+                </span>
+
+                <span class="value">
+                    {{ account_name }}
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span class="label">
+                    Số tiền
+                </span>
+
+                <span class="value amount">
+                    {{ payment.amount }} VNĐ
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span class="label">
+                    Nội dung CK
+                </span>
+
+                <span class="value transfer-content">
+                    {{ transfer_content }}
+                </span>
 
             </div>
 
 
             {% if payment.status == "paid" %}
 
+                <div class="status paid">
 
-                <div class="status status-paid">
-
-                    ✓ Đã thanh toán
-
-                </div>
-
-
-                <div class="success">
-
-                    Thanh toán thành công!
+                    ✓ Thanh toán thành công
 
                     <br>
 
-                    Hệ thống đã tự động xác nhận
-                    thanh toán cho khóa học này.
+                    Học viên đã được hệ thống
+                    xử lý phân lớp.
 
                 </div>
 
-
             {% else %}
 
+                <div class="status pending">
 
-                <div class="status">
-
-                    ⏳ Chờ thanh toán
+                    Đang chờ thanh toán
 
                 </div>
 
@@ -283,73 +345,21 @@
 
                     <button
                         type="submit"
-                        class="btn"
+                        class="btn-pay"
                     >
-
                         Tôi đã chuyển khoản
-
                     </button>
 
                 </form>
 
-
-                <p class="note">
-
-                   
-
-                </p>
-
-
             {% endif %}
 
 
-            <a
-                href="{% url 'accounts:student_dashboard' %}"
-                class="back"
-            >
-
-                ← Quay lại trang học viên
-
-            </a>
-
-
         </div>
-
-
-        <!-- QR -->
-
-        <div class="qr-section">
-
-            <h3>
-
-                Quét mã QR
-
-            </h3>
-
-
-            <img
-                src="data:image/png;base64,{{ qr_code }}"
-                class="qr"
-                alt="QR thanh toán"
-            >
-
-
-            <p class="note">
-
-                Quét mã QR để xem thông tin
-                thanh toán của khóa học.
-
-            </p>
-
-
-        </div>
-
 
     </div>
 
 </div>
 
-
 </body>
-
 </html>

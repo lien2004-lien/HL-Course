@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
 from apps.courses.models import CourseClass
+from apps.payments.models import Payment
 
 
 @login_required
@@ -17,17 +18,16 @@ def teacher_dashboard(request):
             is_active=True,
         )
         .select_related("course")
-        .prefetch_related(
-            "enrollments__student",
-            "schedules",
-        )
+        .prefetch_related("schedules")
         .order_by("course__title", "name")
     )
 
     total_classes = classes.count()
 
     total_students = sum(
-        class_group.student_count
+        class_group.enrollments.filter(
+            payment__status=Payment.Status.PAID
+        ).count()
         for class_group in classes
     )
 
